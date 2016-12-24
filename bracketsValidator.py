@@ -4,10 +4,10 @@ def validator(str):
     dict = {
       '(': 1,
       ')': 2,
-      '[': 3,
-      ']': 4,
-      '{': 5,
-      '}': 6
+      '[': 4,
+      ']': 5,
+      '{': 7,
+      '}': 8
     }
 
     return [dict.get(x, 0) for x in str]
