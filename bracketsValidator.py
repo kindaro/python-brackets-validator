@@ -53,5 +53,6 @@ if __name__ == '__main__':
     assert validator('(}{)')     ==  1, "test isn't passed"
     assert validator(')[') == 0, "test isn't passed"
     assert validator(']{') == 0, "test isn't passed"
+    assert validator('([)]') == 0, "test isn't passed"
 
     print("if it's clean above, all tests are passed")
