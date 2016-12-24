@@ -44,11 +44,11 @@ def validator(str):
 
   return indexNot(seq, 0)
 
-assert(validator('{}[]()')   == -1, "test isn't passed")
-assert(validator('{[(]}')    ==  2, "test isn't passed")
-assert(validator('[{}{}]()') == -1, "test isn't passed")
-assert(validator('[{}{}](}') ==  6, "test isn't passed")
-assert(validator('{[(')      ==  0, "test isn't passed")
-assert(validator('(}{)')     ==  1, "test isn't passed")
+assert validator('{}[]()')   == -1, "test isn't passed"
+assert validator('{[(]}')    ==  2, "test isn't passed"
+assert validator('[{}{}]()') == -1, "test isn't passed"
+assert validator('[{}{}](}') ==  6, "test isn't passed"
+assert validator('{[(')      ==  0, "test isn't passed"
+assert validator('(}{)')     ==  1, "test isn't passed"
 
 print("if it's clean above, all tests are passed")
