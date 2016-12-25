@@ -24,7 +24,7 @@ lexer :: String -> [Symbol]
 lexer = fmap (read . (:[]))
 
 
-validate = validator (Validation [])
+validate = show . validator (Validation []) . (dropBlanks . lexer)
 
 validator :: Validation -> [Symbol] -> Validation
 validator Error _ = Error
@@ -42,5 +42,7 @@ validator (Validation v@(w:ws)) (x:xs)
     | (w == ORound && x == CRound) || (w == OSquare && x == CSquare) || (w == OCurled && x == CCurled)
         = validator (Validation ws) xs
     | otherwise = Error
+
+main = interact validate
 
 
