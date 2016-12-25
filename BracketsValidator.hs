@@ -2,29 +2,24 @@ module Test.BracketsValidator where
 
 data Validation = Validation [Symbol] | Error | Ok deriving (Show)
 
-data Symbol = ORound | OSquare | OCurled | CRound | CSquare | CCurled | Blank
-    deriving (Eq, Show)
-
-instance Read Symbol where
-    readsPrec d s = [(readSymbol s, "")]
-        where
-        readSymbol s
-            | s == "(" = ORound
-            | s == "[" = OSquare
-            | s == "{" = OCurled
-            | s == ")" = CRound
-            | s == "]" = CSquare
-            | s == "}" = CCurled
-            | otherwise = Blank
-
-dropBlanks :: [Symbol] -> [Symbol]
-dropBlanks = filter (/= Blank)
+data Symbol = ORound | OSquare | OCurled | CRound | CSquare | CCurled | Blank String
+    deriving (Eq, Show, Read)
 
 lexer :: String -> [Symbol]
-lexer = fmap (read . (:[]))
-
-
-validate = show . validator (Validation []) . (dropBlanks . lexer)
+lexer [] = []
+lexer (x:xs)
+    | x == '(' = proceed ORound
+    | x == '[' = proceed OSquare
+    | x == '{' = proceed OCurled
+    | x == ')' = proceed CRound
+    | x == ']' = proceed CSquare
+    | x == '}' = proceed CCurled
+    | otherwise = case lexer xs of
+        (Blank string) : _ -> Blank (x:string) : lexer (drop (length string) xs) -- Lookahead!
+        _ -> proceed $ Blank (x:[])
+    where proceed = (: lexer xs)
+        
+validate = show . validator (Validation []) . (lexer)
 
 validator :: Validation -> [Symbol] -> Validation
 validator Error _ = Error
