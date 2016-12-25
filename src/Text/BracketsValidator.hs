@@ -1,4 +1,4 @@
-module Test.BracketsValidator where
+module Text.BracketsValidator where
 
 data Validation = Validation [Symbol] | Error | Ok deriving (Show)
 
@@ -11,14 +11,14 @@ lexer (x:xs)
     | x == '(' = proceed ORound
     | x == '[' = proceed OSquare
     | x == '{' = proceed OCurled
-    | x == ')' = proceed CRound
-    | x == ']' = proceed CSquare
     | x == '}' = proceed CCurled
+    | x == ']' = proceed CSquare
+    | x == ')' = proceed CRound
     | otherwise = case lexer xs of
         (Blank string) : _ -> Blank (x:string) : lexer (drop (length string) xs) -- Lookahead!
         _ -> proceed $ Blank (x:[])
     where proceed = (: lexer xs)
-        
+
 validate = show . validator (Validation []) . (lexer)
 
 validator :: Validation -> [Symbol] -> Validation
@@ -37,7 +37,3 @@ validator (Validation v@(w:ws)) (x:xs)
     | (w == ORound && x == CRound) || (w == OSquare && x == CSquare) || (w == OCurled && x == CCurled)
         = validator (Validation ws) xs
     | otherwise = Error
-
-main = interact validate
-
-
