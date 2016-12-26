@@ -42,7 +42,7 @@ insert :: Symbol -> [Symbol] -> Validation [Symbol]
 insert (Blank _) a = pure a
 insert s a
     | isOpen s = pure (s:a)
-    | (not . null) a && s `isMatching` (head a) = pure (tail a)
+    | (not . null) a && (head a) `isMatching` s = pure (tail a)
     | otherwise = impure (s:a)
 
 data State = State { position :: Integer, status :: Bool }
