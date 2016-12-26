@@ -76,5 +76,6 @@ instance Monad Validation where
               unf = unpack . f
               into s (Validation t y) = Validation (s `mappend` t) y
 
-parser :: Validation [Int] -> [Symbol] -> Validation [Int]
-parser = undefined
+parser :: [Symbol] -> Validation [Symbol]
+parser = ( foldl (>>=) (return []) ) . (fmap insert)
+
