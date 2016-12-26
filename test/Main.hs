@@ -12,6 +12,6 @@ test expression expectation = do
         putStrLn $ "Result: " ++ (show result)
         case (result == expectation) of
             True -> putStrLn "Test passed."
-            False -> putStrLn "Test failed."
+            False -> undefined -- This is where we fail with non-zero exit status.
 
     where result = (parser.lexer) expression
