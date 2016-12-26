@@ -39,8 +39,9 @@ lexer (x:xs)
     where proceed = (: lexer xs)
 
 insert :: Symbol -> [Symbol] -> Validation [Symbol]
-insert (Blank _) a = pure a
-insert s a
+insert s a = (flip add 1) $ insert' s a
+insert' (Blank _) a = pure a
+insert' s a
     | isOpen s = pure (s:a)
     | (not . null) a && (head a) `isMatching` s = pure (tail a)
     | otherwise = impure (s:a)
@@ -52,7 +53,7 @@ data Validation x = Validation State x
     deriving (Eq, Read, Show)
 
 instance Monoid State where
-    mempty = State { position = 1, status = True }
+    mempty = State { position = 0, status = True }
     x `mappend` y
         | status x && status y = State { position = position x + position y, status = True }
         | otherwise = State { position = position x + position y, status = False }
@@ -64,12 +65,13 @@ instance Applicative Validation where
     pure x = Validation mempty x
     (Validation s f) <*> (Validation t x) = Validation (s `mappend` t) (f x)
 
+add (Validation s x) n = Validation ( s { position = position s + n }) x
 taint (Validation s a) = Validation (s { status = False }) a
 impure x = taint $ pure x
 
 instance Monad Validation where
-    (Validation s x) >>= f
-        | status s == False = impure (unf x) -- Do nothing.
+    a@(Validation s x) >>= f
+        | status s == False = Validation s (unf x) -- Do nothing.
         | otherwise = s `into` f x
         -- Maybe I don't need this part.
         where unpack (Validation s a) = a

@@ -3,8 +3,9 @@ module Main where
 import Text.BracketsValidator
 
 main = do
-    test "(meow)" (Validation (State {position = 4, status = True}) [])
-    test "(meow]" (Validation (State {position = 4, status = False}) [CSquare,ORound])
+    test "(meow)" (Validation (State {position = 3, status = True}) [])
+    test "(meow]" (Validation (State {position = 3, status = False}) [CSquare,ORound])
+    test "}meow)" (Validation (State {position = 1, status = False}) [CRound,CCurled])
 
 test expression expectation = do
         putStrLn $ "Testing " ++ (show expression) ++ " ..."
