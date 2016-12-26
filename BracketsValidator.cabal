@@ -29,7 +29,7 @@ test-suite test
     type: exitcode-stdio-1.0
     hs-source-dirs: test
     main-is: Main.hs
-    build-depends: base >=4.8 && <4.9
+    build-depends: base >=4.8 && <4.9, BracketsValidator
 
 executable BracketsValidator
     hs-source-dirs: src
